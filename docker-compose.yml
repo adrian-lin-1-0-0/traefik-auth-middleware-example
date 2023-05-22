@@ -19,6 +19,8 @@ services:
           - "traefik.http.middlewares.auth-middleware.forwardauth.address=http://auth-service/auth/valid"
           - "traefik.http.middlewares.auth-middleware.forwardauth.authResponseHeaders=X-Auth-User"
           - "traefik.http.middlewares.auth-middleware.forwardauth.authResponseHeadersRegex=^X-"
+          - "traefik.http.middlewares.api-replacepathregex.replacepathregex.regex=^/api/v1/(.*)"
+          - "traefik.http.middlewares.api-replacepathregex.replacepathregex.replacement=/$$1"
           - "traefik.http.routers.api.rule=Host(`localhost`)"
           - "traefik.http.routers.api.service=api@internal"
 
@@ -39,8 +41,9 @@ services:
       - "traefik.http.routers.api-service.entrypoints=web"
       - "traefik.http.services.api-service.loadbalancer.server.port=80"
       - "traefik.http.routers.api-service.service=api-service"
-      - "traefik.http.routers.api-service.middlewares=auth-middleware"
+      - "traefik.http.routers.api-service.middlewares=secured"
       - "traefik.http.services.api-service.loadbalancer.healthCheck.path=/health"
+      - "traefik.http.middlewares.secured.chain.middlewares=auth-middleware,api-replacepathregex"
 networks:
   traefik_network:
     external: true
