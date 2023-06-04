@@ -1,4 +1,4 @@
-# Traefik Auth Forword Example With Node.js
+# Traefik ForwardAuth Example With Node.js
 
 ![](./doc/img/authforward.png)
 
